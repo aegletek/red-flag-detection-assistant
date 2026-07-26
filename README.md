@@ -107,7 +107,7 @@ registry credential in the image name, Dockerfile, or repository.
 ## Documentation
 
 - [Developer implementation guide](docs/developer-guide.md)
-- [End-to-end onboarding runbook](https://github.com/nagaraju-ssa/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md)
+- [End-to-end onboarding runbook](https://github.com/aegletek/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md)
 - Swagger: `http://127.0.0.1:8040/docs`
 - Admin Dashboard: `http://127.0.0.1:8010/admin/`
 

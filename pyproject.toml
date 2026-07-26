@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10,<3.13"
 dependencies = [
 
-    "orbit-core @ git+https://github.com/nagaraju-ssa/orbit-repo.git@main",
+    "orbit-core @ git+https://github.com/aegletek/orbit-repo.git@main",
 
     "pydantic>=2.0",
     "pydantic-settings>=2.0",

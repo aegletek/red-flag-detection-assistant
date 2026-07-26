@@ -22,16 +22,16 @@ api:
 documentation:
   - type: developer_guide
     title: Red Flag Detection developer guide
-    url: https://github.com/nagaraju-ssa/red-flag-detection-assistant/blob/main/docs/developer-guide.md
+    url: https://github.com/aegletek/red-flag-detection-assistant/blob/main/docs/developer-guide.md
   - type: api
     title: Local Swagger API
     url: http://127.0.0.1:8040/docs
   - type: runbook
     title: End-to-end onboarding runbook
-    url: https://github.com/nagaraju-ssa/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md
+    url: https://github.com/aegletek/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md
   - type: repository
     title: Source repository
-    url: https://github.com/nagaraju-ssa/red-flag-detection-assistant
+    url: https://github.com/aegletek/red-flag-detection-assistant
 deployment:
   provider: local
   environment: local
