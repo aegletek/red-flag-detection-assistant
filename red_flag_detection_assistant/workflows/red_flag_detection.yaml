@@ -1,0 +1,26 @@
+workflow:
+  name: "red_flag_detection"
+  description: "Retrieve approved case data, identify evidence-based red flags with an LLM, and persist structured findings for human review."
+  execution_adapter: langgraph
+  start: retrieve_case_data
+  nodes:
+
+    - name: retrieve_case_data
+      capability: case_data_retrieval
+      tools:
+        - cosmos
+
+    - name: analyze_red_flags
+      capability: red_flag_analysis
+      tools: []
+
+    - name: persist_findings
+      capability: findings_persistence
+      tools:
+        - red_flag_repository
+
+  edges:
+    - from: retrieve_case_data
+      to: analyze_red_flags
+    - from: analyze_red_flags
+      to: persist_findings

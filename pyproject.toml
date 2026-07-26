@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "red-flag-detection-assistant"
+version = "0.1.0"
+description = "Retrieves approved case data from Cosmos DB, uses an LLM to identify evidence-based red flags, and persists structured findings for human review."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+
+    "orbit-core @ git+https://github.com/nagaraju-ssa/orbit-repo.git@main",
+
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+
+
+    "sqlalchemy>=2.0",
+    "psycopg2-binary>=2.9",
+    "aiohttp>=3.9,<4",
+
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+
+    "httpx>=0.27",
+
+]
+
+
+[project.scripts]
+red-flag-detection-assistant = "red_flag_detection_assistant.cli:main"
+
+
+[tool.setuptools.packages.find]
+include = ["red_flag_detection_assistant*"]
+
+[tool.setuptools.package-data]
+red_flag_detection_assistant = ["workflow.yaml", "workflows/*.yaml", "usecase-manifest.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "strict"

@@ -1,0 +1,4 @@
+services:
+  orbit-admin:
+    environment:
+      ORBIT_ADMIN_HEALTH_ALLOWED_HOSTS: '["127.0.0.1","localhost","::1","financial-research-assistant","customer-support-assistant","red-flag-detection-assistant"]'

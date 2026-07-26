@@ -1,0 +1,83 @@
+schema_version: "1.0"
+id: red-flag-detection-assistant
+name: "Red Flag Detection Assistant"
+description: "Retrieves approved case data from Cosmos DB, uses an LLM to identify evidence-based red flags, and persists structured findings for human review."
+version: "0.1.0"
+owner:
+  team: "Risk Analytics Team"
+
+  contact: "risk-analytics@example.com"
+
+lifecycle_status: active
+runtime:
+  orbit_core_version: "0.1.0"
+  python_version: "3.10"
+  environment: local
+api:
+  base_url: http://127.0.0.1:8000
+
+  health_url: http://127.0.0.1:8000/health/ready
+  openapi_url: http://127.0.0.1:8000/openapi.json
+
+documentation:
+  - type: developer_guide
+    title: Red Flag Detection developer guide
+    url: https://github.com/nagaraju-ssa/red-flag-detection-assistant/blob/main/docs/developer-guide.md
+  - type: api
+    title: Local Swagger API
+    url: http://127.0.0.1:8040/docs
+  - type: runbook
+    title: End-to-end onboarding runbook
+    url: https://github.com/nagaraju-ssa/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md
+  - type: repository
+    title: Source repository
+    url: https://github.com/nagaraju-ssa/red-flag-detection-assistant
+deployment:
+  provider: local
+  environment: local
+workflows:
+
+  - name: red_flag_detection
+    description: "Retrieve approved case data, identify evidence-based red flags with an LLM, and persist structured findings for human review."
+    execution_adapter: langgraph
+    start: retrieve_case_data
+    nodes:
+
+      - name: retrieve_case_data
+        capability: case_data_retrieval
+        tools:
+          - cosmos
+
+      - name: analyze_red_flags
+        capability: red_flag_analysis
+        tools: []
+
+      - name: persist_findings
+        capability: findings_persistence
+        tools:
+          - red_flag_repository
+
+    edges:
+      - source: retrieve_case_data
+        target: analyze_red_flags
+      - source: analyze_red_flags
+        target: persist_findings
+
+tools:
+
+  - name: cosmos
+    description: "Reads approved case records from the Orbit platform Cosmos DB integration."
+    source: platform
+    capabilities:
+      - case_data_retrieval
+
+  - name: red_flag_repository
+    description: "Persists validated red-flag findings in the use-case-owned PostgreSQL database."
+    source: usecase
+    capabilities:
+      - findings_persistence
+
+metadata:
+  generated_by: orbit-initializr
+  initializr_schema_version: "1.0"
+  template_version: "0.1.0"
