@@ -110,6 +110,19 @@ registry credential in the image name, Dockerfile, or repository.
 - [End-to-end onboarding runbook](https://github.com/aegletek/orbit-repo/blob/main/docs/demo/RED_FLAG_DETECTION_END_TO_END_RUNBOOK.md)
 - Swagger: `http://127.0.0.1:8040/docs`
 - Admin Dashboard: `http://127.0.0.1:8010/admin/`
+- Red Flag workspace: `http://127.0.0.1:8040/ui/`
+- Findings history: `GET /findings?page=1&page_size=10&search=case`
+- Findings trend: `GET /findings/trend`
+- Workspace configuration: `GET /ui/config`
+
+### Red Flag workspace
+
+The dedicated `/ui/` workspace starts the approved Cosmos-backed red-flag
+workflow using a case ID. It presents completed-finding and recent-activity
+cards, a 14-day workflow trend, searchable and paginated findings history,
+and the persisted risk assessment summary. Light and dark themes are included.
+The Workflow Traces portal is configured through `LANGFUSE_BASE_URL`, and the
+workspace displays the authenticated Admin name when launched from Orbit Admin.
 
 The Admin Dashboard manifest publishes these links without exposing case data,
 LLM prompts, findings, or credentials.

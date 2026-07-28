@@ -43,7 +43,7 @@ red-flag-detection-assistant = "red_flag_detection_assistant.cli:main"
 include = ["red_flag_detection_assistant*"]
 
 [tool.setuptools.package-data]
-red_flag_detection_assistant = ["workflow.yaml", "workflows/*.yaml", "usecase-manifest.yaml"]
+red_flag_detection_assistant = ["workflow.yaml", "workflows/*.yaml", "usecase-manifest.yaml", "ui/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -17,3 +17,5 @@ class UseCaseSettings(BaseSettings):
     environment: str = "local"
 
     database_url: str = ""
+    langfuse_base_url: str = "https://us.cloud.langfuse.com"
+    ui_display_name: str = "Local administrator"

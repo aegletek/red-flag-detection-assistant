@@ -10,7 +10,11 @@ from sqlalchemy import (
     Table,
     Text,
     create_engine,
+    desc,
+    func,
     insert,
+    or_,
+    select,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.engine import Engine
@@ -99,3 +103,22 @@ class UseCaseRepository:
             connection.execute(statement)
 
         return finding_id
+
+    def list_findings(self, *, search: str, page: int, page_size: int) -> tuple[list[dict], int]:
+        filters = []
+        if search:
+            pattern = f"%{search.lower()}%"
+            filters.append(or_(func.lower(self.findings.c.case_id).like(pattern), func.lower(self.findings.c.overall_risk).like(pattern), func.lower(self.findings.c.workflow_id).like(pattern)))
+        query, count = select(self.findings).order_by(desc(self.findings.c.created_at)), select(func.count()).select_from(self.findings)
+        if filters: query, count = query.where(*filters), count.where(*filters)
+        with self.engine.connect() as connection:
+            total = int(connection.execute(count).scalar_one())
+            rows = connection.execute(query.offset((page - 1) * page_size).limit(page_size)).mappings().all()
+        return [dict(row) for row in rows], total
+
+    def trend(self, *, days: int = 14) -> list[dict]:
+        with self.engine.connect() as connection: dates = connection.execute(select(self.findings.c.created_at)).scalars().all()
+        counts: dict[str, int] = {}
+        for value in dates:
+            key = value.date().isoformat(); counts[key] = counts.get(key, 0) + 1
+        return [{"date": key, "runs": value} for key, value in sorted(counts.items())[-days:]]

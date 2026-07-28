@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from orbit_core import WorkflowRequest
@@ -12,6 +14,7 @@ from orbit_core.admin import AdminOnboarding, AdminWorkflowTelemetry, CostSource
 from .composition import UseCaseApplication, WORKFLOW_NAME, build_application
 
 from .onboarding import build_admin_onboarding
+from .repository import UseCaseRepository
 
 
 
@@ -59,6 +62,10 @@ def create_app(
         lifespan=lifespan,
 
     )
+
+    def repository() -> UseCaseRepository:
+        if not application.settings.database_url: raise HTTPException(status_code=503, detail="Findings history is unavailable")
+        store = UseCaseRepository(application.settings.database_url); store.create_schema(); return store
 
     @app.get("/health/")
     async def health():
@@ -129,5 +136,18 @@ def create_app(
             workflow_id=response.workflow_id,
             request_id=response.request_id,
         )
+
+    @app.get("/findings")
+    async def findings(search: str = Query(default="", max_length=120), page: int = Query(default=1, ge=1), page_size: int = Query(default=10, ge=1, le=50)):
+        items, total = repository().list_findings(search=search, page=page, page_size=page_size)
+        return {"items": items, "page": page, "page_size": page_size, "total": total}
+
+    @app.get("/findings/trend")
+    async def findings_trend(): return {"daily": repository().trend()}
+
+    @app.get("/ui/config")
+    async def ui_config(): return {"display_name": application.settings.ui_display_name, "langfuse_url": application.settings.langfuse_base_url}
+
+    app.mount("/ui", StaticFiles(directory=Path(__file__).with_name("ui"), html=True), name="red-flag-ui")
 
     return app
